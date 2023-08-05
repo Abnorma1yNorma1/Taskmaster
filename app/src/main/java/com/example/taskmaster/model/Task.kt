@@ -11,11 +11,13 @@ data class Task(
 
     var description: String,
     var completed: Char = FALSE,
-    var priority: Byte,
-    var tagList: String,
+    var priority: Byte = 0,
+    var tagList: String = "",
+    var expirationDate: OffsetDateTime = OffsetDateTime.MAX,
+    var notify: Char = FALSE,
+    var notifyTime: OffsetDateTime = expirationDate.minusMinutes(10),
+    var superTask: Long = 0,
 //    var location: ,
-    var expirationDate: OffsetDateTime,
-    var superTask: Long,
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0
 ) {
