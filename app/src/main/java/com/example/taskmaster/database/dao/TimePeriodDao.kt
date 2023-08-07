@@ -5,12 +5,11 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.example.taskmaster.model.TimePeriod
-import java.time.OffsetDateTime
 import java.time.OffsetTime
 import java.time.Period
 
 @Dao
-interface PeriodDao {
+interface TimePeriodDao {
 
     @Insert(onConflict = OnConflictStrategy.NONE)
     fun insert(timePeriod: TimePeriod)
@@ -19,16 +18,24 @@ interface PeriodDao {
     fun updateName(id: Long, name: String)
 
     @Query("UPDATE timePeriodTable SET startDay = :startDate, endDay = :endDate WHERE id = :id")
-    fun updateDates(id: Long, startDate: OffsetDateTime, endDate: OffsetDateTime)
+    fun updateDates(id: Long, startDate: Long, endDate: Long)
 
     @Query("UPDATE timePeriodTable SET repeatable = :repeatable WHERE id = :id")
     fun updateRepeatability(id: Long, repeatable: Char)
 
-    @Query("UPDATE timePeriodTable SET period = :period, skipPeriod = :skipPeriod WHERE id = :id")
-    fun updatePeriods(id: Long, period: Period, skipPeriod: Period)
+    @Query("UPDATE timePeriodTable SET " +
+            "periodYears = :periodYears, periodMonths = :periodMonths, periodDays = :periodDays," +
+            " skipPeriodYears = :skipPeriodYears, skipPeriodMonths = :skipPeriodMonths, skipPeriodDays = :skipPeriodDays" +
+            " WHERE id = :id")
+    fun updatePeriods(id: Long, periodYears: Byte, periodMonths: Byte, periodDays: Byte,
+                      skipPeriodYears: Byte, skipPeriodMonths: Byte, skipPeriodDays: Byte)
 
-    @Query("UPDATE timePeriodTable SET startTime = :startTime, endTime = :endTime WHERE id = :id")
-    fun updateTimes(id: Long, startTime: OffsetTime, endTime: OffsetTime)
+    @Query("UPDATE timePeriodTable SET " +
+            "startTimeHours = :startTimeHours, startTimeMinutes = :startTimeMinutes, startTimeSeconds = :startTimeSeconds," +
+            " endTimeHours = :endTimeHours, endTimeMinutes = :endTimeMinutes, endTimeSeconds = :endTimeSeconds " +
+            "WHERE id = :id")
+    fun updateTimes(id: Long, startTimeHours: Byte, startTimeMinutes: Byte, startTimeSeconds: Byte,
+                    endTimeHours: Byte, endTimeMinutes: Byte, endTimeSeconds: Byte)
 
     @Query("UPDATE timePeriodTable SET idList = :idList WHERE id = :id")
     fun updateIdList(id: Long, idList: String)

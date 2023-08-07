@@ -4,12 +4,14 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 import com.example.taskmaster.database.dao.TaskDao
 import com.example.taskmaster.model.Task
 
 @Database(
     entities = [Task::class],
-    version = AppDatabase.DATABASE_VERSION
+    version = AppDatabase.DATABASE_VERSION,
+    exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
 
@@ -18,7 +20,7 @@ abstract class AppDatabase : RoomDatabase() {
 
     companion object {
         const val DATABASE_VERSION = 1
-        private val DATABASE_NAME = "TaskmasterDatabase"
+        private const val DATABASE_NAME = "TaskmasterDatabase"
 
         private var INSTANCE: AppDatabase? = null
 

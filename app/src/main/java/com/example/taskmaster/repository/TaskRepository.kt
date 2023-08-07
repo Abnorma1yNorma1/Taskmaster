@@ -15,20 +15,20 @@ class TaskRepository(val taskDao: TaskDao) {
 
     suspend fun insertTask(task: Task) {
         taskScope.launch {
-            taskDao.incert(task)
+            taskDao.insert(task)
         }
     }
 
-    suspend fun updateTask(task: Task) {
-        taskScope.launch {
-            taskDao.update(task)
-        }
-    }
-
-    suspend fun getCompleteTasks():List<Task> {
-       return taskScope.async {
-            taskDao.getCompleteTasks()
+    suspend fun getAllTasks(): List<Task> {
+        return taskScope.async {
+            taskDao.getAllTasks()
         }.await()
+    }
+
+    suspend fun deleteAllTasks() {
+        taskScope.launch {
+            taskDao.deleteAll()
+        }
     }
 
 }

@@ -13,9 +13,9 @@ data class Task(
     var completed: Char = FALSE,
     var priority: Byte = 0,
     var tagList: String = "",
-    var expirationDate: OffsetDateTime = OffsetDateTime.MAX,
+    var expirationDate: Long?,
     var notify: Char = FALSE,
-    var notifyTime: OffsetDateTime = expirationDate.minusMinutes(10),
+    var notifyTime: Long? = null,
     var superTask: Long = 0,
 //    var location: ,
     @PrimaryKey(autoGenerate = true)

@@ -32,13 +32,13 @@ interface TaskDao {
     fun getTaskIdByMatchingTag(tagQuery: String): Long
 
     @Query("UPDATE taskTable SET expirationDate = :expirationDate WHERE id = :id")
-    fun updateExpirationDate(id: Long, expirationDate: OffsetDateTime)
+    fun updateExpirationDate(id: Long, expirationDate: Long?)
 
     @Query("UPDATE taskTable SET notify = :notify WHERE id = :id")
     fun updateNotify(id: Long, notify: Char)
 
     @Query("UPDATE taskTable SET notifyTime = :notifyTime WHERE id = :id")
-    fun updateNotifyTime(id: Long, notifyTime: OffsetDateTime)
+    fun updateNotifyTime(id: Long, notifyTime: Long?)
 
     @Query("UPDATE taskTable SET superTask = :superTask WHERE id = :id")
     fun updateESuperTask(id: Long, superTask: Long)

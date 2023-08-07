@@ -5,7 +5,7 @@ import com.example.taskmaster.database.AppDatabase
 
 class TaskmasterApp: Application() {
 
-    val database by lazy {AppDatabase.getDatabase(this)}
+    val database by lazy { AppDatabase.getDatabase(this)}
 
     override fun onCreate() {
         super.onCreate()
