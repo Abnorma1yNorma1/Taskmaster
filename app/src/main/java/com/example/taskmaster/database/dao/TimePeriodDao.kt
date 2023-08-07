@@ -21,7 +21,7 @@ interface TimePeriodDao {
     fun updateDates(id: Long, startDate: Long, endDate: Long)
 
     @Query("UPDATE timePeriodTable SET repeatable = :repeatable WHERE id = :id")
-    fun updateRepeatability(id: Long, repeatable: Char)
+    fun updateRepeatability(id: Long, repeatable: Byte)
 
     @Query("UPDATE timePeriodTable SET " +
             "periodYears = :periodYears, periodMonths = :periodMonths, periodDays = :periodDays," +
@@ -41,7 +41,7 @@ interface TimePeriodDao {
     fun updateIdList(id: Long, idList: String)
 
     @Query("UPDATE timePeriodTable SET exceptional = :exceptional WHERE id = :id")
-    fun updateExceptional(id: Long, exceptional: Char)
+    fun updateExceptional(id: Long, exceptional: Byte)
 
     @Query("SELECT * FROM timePeriodTable WHERE id = :id")
     fun getTimePeriod(id: Long): TimePeriod

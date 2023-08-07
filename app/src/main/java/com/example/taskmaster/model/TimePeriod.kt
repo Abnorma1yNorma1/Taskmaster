@@ -13,7 +13,7 @@ data class TimePeriod(
     var name: String,
     var startDay: Long = OffsetDateTime.now().truncatedTo(ChronoUnit.DAYS).toEpochSecond(),
     var endDay: Long = OffsetDateTime.MAX.toEpochSecond(),
-    var repeatable: Char = FALSE,
+    var repeatable: Byte = BooleanStandIn.FALSE.value,
     var periodYears: Byte = 0,
     var periodMonths: Byte = 0,
     var periodDays: Byte = 0,
@@ -26,15 +26,9 @@ data class TimePeriod(
     var endTimeHours: Byte,
     var endTimeMinutes: Byte,
     var endTimeSeconds: Byte,
-    var idList: String = "",             //list of tags or periods
-    var exceptional: Char = FALSE,      // switch for including tags or excluding periods
+    var idList: String = "",                                 //list of tags or periods
+    var exceptional: Byte = BooleanStandIn.FALSE.value,      // switch for including tags or excluding periods
     //var location: ,
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0
-) {
-    companion object {
-
-        const val TRUE: Char = '1'
-        const val FALSE: Char = '0'
-    }
-}
+)

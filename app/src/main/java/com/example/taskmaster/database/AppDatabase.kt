@@ -12,7 +12,7 @@ import com.example.taskmaster.model.Task
     entities = [Task::class],
     version = AppDatabase.DATABASE_VERSION,
     exportSchema = false
-)
+)   //TODO converter
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun taskDao(): TaskDao
