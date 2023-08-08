@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">Taskmaster</string>
+    <string name="progress_graph_button">progress_graph_button</string>
+    <string name="planner_button">planner_button</string>
+    <string name="zoom_out_button">zoom_out_button</string>
 </resources>
