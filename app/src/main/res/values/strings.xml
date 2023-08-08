@@ -5,4 +5,5 @@
     <string name="zoom_out_button">zoom_out_button</string>
     <string name="preferences">preferences</string>
     <string name="show_completed">show completed</string>
+    <string name="expand_button">Expand button.</string>
 </resources>

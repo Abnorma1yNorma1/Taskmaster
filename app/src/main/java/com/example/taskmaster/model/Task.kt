@@ -12,7 +12,7 @@ data class Task(
     var completed: Byte = BooleanStandIn.FALSE.value,
     var priority: Byte = 0,
     var tagList: String = "",
-    var expirationDate: Long?,
+    var expirationDate: Long? = null,
     var notify: Byte = BooleanStandIn.FALSE.value,
     var notifyTime: Long? = null,
     var superTask: Long = 0,
