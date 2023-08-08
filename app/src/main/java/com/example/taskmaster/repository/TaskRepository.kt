@@ -8,7 +8,7 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
-class TaskRepository(val taskDao: TaskDao) {
+class TaskRepository(private val taskDao: TaskDao) {
 
     private val job = SupervisorJob()
     private val taskScope = CoroutineScope(job + Dispatchers.IO)
@@ -24,6 +24,14 @@ class TaskRepository(val taskDao: TaskDao) {
             taskDao.getAllTasks()
         }.await()
     }
+
+    suspend fun getCurrentTasks(date:Long): List<Task> {
+        return taskScope.async {
+            taskDao.getCurrentTasks(date)
+        }.await()
+    }
+
+    fun getCurrentTasksLiveData(date:Long) = taskDao.getCurrentTasksLiveData(date)
 
     suspend fun deleteAllTasks() {
         taskScope.launch {

@@ -1,11 +1,12 @@
 package com.example.taskmaster.database.dao
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import com.example.taskmaster.model.BooleanStandIn
 import com.example.taskmaster.model.Task
-import java.time.OffsetDateTime
 
 @Dao
 interface TaskDao {
@@ -46,6 +47,14 @@ interface TaskDao {
     @Query("SELECT * FROM taskTable WHERE id = :id")
     fun getTaskById(id: Long): Task
 
+    @Query("SELECT * FROM taskTable WHERE expirationDate < :date " +
+            "AND completed = :completed ")
+    fun getCurrentTasks(date: Long, completed: Byte = FALSE): List<Task>
+
+    @Query("SELECT * FROM taskTable WHERE expirationDate < :date " +
+            "AND completed = :completed ")
+    fun getCurrentTasksLiveData(date: Long, completed: Byte = FALSE): LiveData <List<Task>>
+
     @Query("SELECT * FROM taskTable")
     fun getAllTasks(): List<Task>
 
@@ -54,4 +63,11 @@ interface TaskDao {
 
     @Query("DELETE FROM taskTable")
     fun deleteAll()
+
+    companion object{
+        @JvmStatic
+        val FALSE = BooleanStandIn.FALSE.value
+        @JvmStatic
+        val TRUE = BooleanStandIn.TRUE.value
+    }
 }
