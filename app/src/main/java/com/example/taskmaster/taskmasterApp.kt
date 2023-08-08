@@ -3,7 +3,7 @@ package com.example.taskmaster
 import android.app.Application
 import com.example.taskmaster.database.AppDatabase
 
-class TaskmasterApp: Application() {
+class taskmasterApp: Application() {
 
     val database by lazy { AppDatabase.getDatabase(this)}
 
@@ -13,6 +13,6 @@ class TaskmasterApp: Application() {
     }
 
     companion object {
-        lateinit var INSTANCE: TaskmasterApp
+        lateinit var INSTANCE: taskmasterApp
     }
 }
