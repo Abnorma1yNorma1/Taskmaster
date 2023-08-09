@@ -15,8 +15,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <LinearLayout
-            android:id="@+id/subtask_tag_view_pager"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/subtask_tag_recycler"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_gravity="start|top"
@@ -24,7 +24,7 @@
             android:layout_marginTop="10dp"
             android:layout_marginEnd="50dp"
             android:orientation="horizontal">
-        </LinearLayout>
+        </androidx.recyclerview.widget.RecyclerView>
 
         <TextView
             android:id="@+id/subtask_description"
@@ -39,7 +39,7 @@
             android:textSize="20sp"
             android:lines="4"/>
 
-        <RadioButton
+        <CheckBox
             android:id="@+id/subtask_completed_button"
             android:layout_width="30dp"
             android:layout_height="30dp"

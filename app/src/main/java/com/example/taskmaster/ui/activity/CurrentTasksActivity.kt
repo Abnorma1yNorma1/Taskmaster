@@ -12,10 +12,11 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.taskmaster.R
 import com.example.taskmaster.repository.CompletedTaskRepository
+import com.example.taskmaster.ui.activity.recyclerAdapters.SubtaskClickDelegate
 import com.example.taskmaster.ui.activity.recyclerAdapters.TaskClickDelegate
 import com.example.taskmaster.ui.activity.recyclerAdapters.TaskRecyclerAdapter
 
-class CurrentTasksActivity : AppCompatActivity(), TaskClickDelegate {
+class CurrentTasksActivity : AppCompatActivity(), TaskClickDelegate, SubtaskClickDelegate {
 
     private lateinit var binding: ActivityCurrentTaskBinding
     private lateinit var viewModel: CurrentTasksViewModel
@@ -24,7 +25,7 @@ class CurrentTasksActivity : AppCompatActivity(), TaskClickDelegate {
         super.onCreate(savedInstanceState)
         binding = ActivityCurrentTaskBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        val adapter = TaskRecyclerAdapter(this)
+        val adapter = TaskRecyclerAdapter(this, this)
         viewModel = ViewModelProvider(
             this, CurrentTasksViewModelFactory(
                 TaskRepository(TaskmasterApp.INSTANCE.database.taskDao()),
@@ -80,6 +81,10 @@ class CurrentTasksActivity : AppCompatActivity(), TaskClickDelegate {
 
     override fun onTaskExpandButton(id: Long) {
         viewModel
+        TODO("Not yet implemented")
+    }
+
+    override fun onSubtaskCompletedButtonClick(id: Long) {
         TODO("Not yet implemented")
     }
 }

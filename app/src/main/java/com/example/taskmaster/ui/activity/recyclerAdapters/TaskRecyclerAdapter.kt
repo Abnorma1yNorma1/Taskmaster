@@ -12,12 +12,11 @@ import java.time.LocalDate
 import java.time.Period
 
 class TaskRecyclerAdapter(
-    private val delegate: TaskClickDelegate
+    private val delegate: TaskClickDelegate,
+    private val subDelegate: SubtaskClickDelegate
 ) : RecyclerView.Adapter<TaskRecyclerAdapter.TaskViewHolder>() {
 
-    //TODO (change to LiveData/Flow?)
     private var taskList: MutableList<Task> = mutableListOf()
-
 
     inner class TaskViewHolder(private val itemBinding: ItemTaskBinding) :
         RecyclerView.ViewHolder(itemBinding.root) {
@@ -37,15 +36,9 @@ class TaskRecyclerAdapter(
                     }
 
                 }
-
-
-//                taskTagRecycler
-//            taskRecycler
-//            /TODO(implement above and scale button)
-
-
+                taskTagRecycler.adapter = TagRecyclerAdapter()
+                taskRecycler.adapter = SubtaskRecyclerAdapter(subDelegate)
             }
-
         }
 
         private fun untilTaskEnd(task: Task): String {

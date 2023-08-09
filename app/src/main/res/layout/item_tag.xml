@@ -3,10 +3,11 @@
     android:layout_width="wrap_content"
     android:layout_height="40dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/tag_id"
-    >
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/tag_id">
 
     <TextView
+        android:id="@+id/tag_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="15sp"
@@ -14,7 +15,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:text="Tag"
+        tools:text="Tag"
         android:background="@drawable/tag_background"
         android:padding="10dp"
         >
