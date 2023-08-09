@@ -1,6 +1,7 @@
 package com.example.taskmaster.repository
 
 import com.example.taskmaster.database.dao.TaskDao
+import com.example.taskmaster.model.BooleanStandIn
 import com.example.taskmaster.model.Task
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -32,6 +33,18 @@ class TaskRepository(private val taskDao: TaskDao) {
     }
 
     fun getCurrentTasksLiveData(date:Long) = taskDao.getCurrentTasksLiveData(date)
+
+    suspend fun isComplete(id: Long):Boolean{
+       return taskScope.async { taskDao.getCompletedBool(id)==BooleanStandIn.TRUE.value}.await()
+    }
+
+    fun changeTaskCompletion(id: Long){
+        taskScope.launch {
+            if (isComplete(id)){
+                taskDao.updateCompleted(id,BooleanStandIn.FALSE.value)
+            }else taskDao.updateCompleted(id,BooleanStandIn.TRUE.value)
+        }
+    }
 
     suspend fun deleteAllTasks() {
         taskScope.launch {

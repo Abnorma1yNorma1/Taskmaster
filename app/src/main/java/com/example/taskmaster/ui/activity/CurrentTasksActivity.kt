@@ -11,9 +11,11 @@ import com.example.taskmaster.ui.activity.viewModel.CurrentTasksViewModelFactory
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.taskmaster.R
+import com.example.taskmaster.repository.CompletedTaskRepository
+import com.example.taskmaster.ui.activity.recyclerAdapters.TaskClickDelegate
 import com.example.taskmaster.ui.activity.recyclerAdapters.TaskRecyclerAdapter
 
-class CurrentTasksActivity : AppCompatActivity() {
+class CurrentTasksActivity : AppCompatActivity(), TaskClickDelegate {
 
     private lateinit var binding: ActivityCurrentTaskBinding
     private lateinit var viewModel: CurrentTasksViewModel
@@ -22,10 +24,11 @@ class CurrentTasksActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityCurrentTaskBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        val adapter = TaskRecyclerAdapter()
+        val adapter = TaskRecyclerAdapter(this)
         viewModel = ViewModelProvider(
             this, CurrentTasksViewModelFactory(
-                TaskRepository(TaskmasterApp.INSTANCE.database.taskDao())
+                TaskRepository(TaskmasterApp.INSTANCE.database.taskDao()),
+                CompletedTaskRepository(TaskmasterApp.INSTANCE.database.completedTasksDao())
             )
         ).get(CurrentTasksViewModel::class.java)
         with(binding) {
@@ -35,7 +38,7 @@ class CurrentTasksActivity : AppCompatActivity() {
             setSupportActionBar(toolbar)
 
         }
-        viewModel.currentTasks.observe(this) { tasks ->
+        viewModel.getCurrentTasks().observe(this) { tasks ->
             adapter.setData(tasks)
             adapter.notifyDataSetChanged()
         }
@@ -68,5 +71,15 @@ class CurrentTasksActivity : AppCompatActivity() {
         else -> {
             super.onOptionsItemSelected(item)
         }
+    }
+
+    override fun onTaskCompletedButtonClick(id: Long) {
+        viewModel.processCompleteTaskButton(id)
+//        TODO("Not yet implemented completed task date storage")
+    }
+
+    override fun onTaskExpandButton(id: Long) {
+        viewModel
+        TODO("Not yet implemented")
     }
 }

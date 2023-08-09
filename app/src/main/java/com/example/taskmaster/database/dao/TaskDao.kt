@@ -18,10 +18,13 @@ interface TaskDao {
     fun updateDescription(id: Long, description: String)
 
     @Query("UPDATE taskTable SET completed = :completed WHERE id = :id")
-    fun updateCompleted(id: Long, completed: Char)
+    fun updateCompleted(id: Long, completed: Byte)
+
+    @Query("SELECT completed FROM taskTable WHERE id = :id")
+    fun getCompletedBool(id: Long):Byte
 
     @Query("SELECT * FROM taskTable WHERE completed = :completed")
-    fun getTasksByCompletion(completed: Char): List<Task>
+    fun getTasksByCompletion(completed: Byte): List<Task>
 
     @Query("UPDATE taskTable SET priority = :priority WHERE id = :id")
     fun updatePriority(id: Long, priority: Byte)
@@ -36,7 +39,7 @@ interface TaskDao {
     fun updateExpirationDate(id: Long, expirationDate: Long?)
 
     @Query("UPDATE taskTable SET notify = :notify WHERE id = :id")
-    fun updateNotify(id: Long, notify: Char)
+    fun updateNotify(id: Long, notify: Byte)
 
     @Query("UPDATE taskTable SET notifyTime = :notifyTime WHERE id = :id")
     fun updateNotifyTime(id: Long, notifyTime: Long?)

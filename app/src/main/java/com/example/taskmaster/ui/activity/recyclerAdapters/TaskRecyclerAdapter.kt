@@ -1,9 +1,8 @@
 package com.example.taskmaster.ui.activity.recyclerAdapters
 
-import android.content.Context
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.taskmaster.databinding.ItemTaskBinding
@@ -12,22 +11,40 @@ import java.time.Clock
 import java.time.LocalDate
 import java.time.Period
 
-class TaskRecyclerAdapter : RecyclerView.Adapter<TaskRecyclerAdapter.TaskViewHolder>() {
+class TaskRecyclerAdapter(
+    private val delegate: TaskClickDelegate
+) : RecyclerView.Adapter<TaskRecyclerAdapter.TaskViewHolder>() {
 
-//TODO (change to LiveData/Flow?)
+    //TODO (change to LiveData/Flow?)
     private var taskList: MutableList<Task> = mutableListOf()
+
 
     inner class TaskViewHolder(private val itemBinding: ItemTaskBinding) :
         RecyclerView.ViewHolder(itemBinding.root) {
         fun bind(task: Task) {
-//            itemBinding.taskTagViewPager =
-            itemBinding.taskDescription.text = task.description
-//            itemBinding.taskCompletedButton
-            itemBinding.taskPriority.text = task.priority.toString()
-            itemBinding.taskTimeLeftText.text = untilTaskEnd(task)
-//            itemBinding.taskExpandButton
-//            itemBinding.taskRecycler
-//            /TODO(implement above)
+            with(itemBinding) {
+                taskDescription.text = task.description
+                taskCompletedButton.setOnClickListener {
+                    delegate.onTaskCompletedButtonClick(task.id)
+                }
+                taskPriority.text = task.priority.toString()
+                taskTimeLeftText.text = untilTaskEnd(task)
+                taskExpandButton.setOnClickListener {
+                    if (itemBinding.taskExpandButton.isChecked) {
+                        taskRecycler.visibility = View.GONE
+                    } else {
+                        taskRecycler.visibility = View.VISIBLE
+                    }
+
+                }
+
+
+//                taskTagRecycler
+//            taskRecycler
+//            /TODO(implement above and scale button)
+
+
+            }
 
         }
 
@@ -47,7 +64,7 @@ class TaskRecyclerAdapter : RecyclerView.Adapter<TaskRecyclerAdapter.TaskViewHol
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {
         val itemBinding =
-            ItemTaskBinding.inflate(LayoutInflater.from(parent.context),parent,false)
+            ItemTaskBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return TaskViewHolder(itemBinding)
     }
 
@@ -60,7 +77,7 @@ class TaskRecyclerAdapter : RecyclerView.Adapter<TaskRecyclerAdapter.TaskViewHol
         holder.bind(task)
     }
 
-    fun setData(newList: List<Task>){
+    fun setData(newList: List<Task>) {
         val diffTask = TaskDiffCallback(taskList, newList)
         val result = DiffUtil.calculateDiff(diffTask)
         taskList.clear()

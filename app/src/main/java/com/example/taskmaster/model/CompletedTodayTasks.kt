@@ -9,7 +9,6 @@ import androidx.room.PrimaryKey
 data class CompletedTodayTasks(
 
     var taskId: Long,
-    var date: Long,
     @PrimaryKey(autoGenerate = true)
-    var id: Long = 0
+    var id: Int = 0
 )
