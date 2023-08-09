@@ -1,7 +1,9 @@
 package com.example.taskmaster.ui.activity.recyclerAdapters
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.taskmaster.databinding.ItemTaskBinding
@@ -13,7 +15,7 @@ import java.time.Period
 class TaskRecyclerAdapter : RecyclerView.Adapter<TaskRecyclerAdapter.TaskViewHolder>() {
 
 //TODO (change to LiveData/Flow?)
-    private lateinit var taskList: MutableList<Task>
+    private var taskList: MutableList<Task> = mutableListOf()
 
     inner class TaskViewHolder(private val itemBinding: ItemTaskBinding) :
         RecyclerView.ViewHolder(itemBinding.root) {
@@ -64,27 +66,6 @@ class TaskRecyclerAdapter : RecyclerView.Adapter<TaskRecyclerAdapter.TaskViewHol
         taskList.clear()
         taskList.addAll(newList)
         result.dispatchUpdatesTo(this)
-    }
-
-}
-
-class TaskDiffCallback(private val oldList: List<Task>, private val newList: List<Task>):DiffUtil.Callback(){
-    override fun getOldListSize(): Int {
-        return oldList.size
-    }
-
-    override fun getNewListSize(): Int {
-        return newList.size
-    }
-
-    override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        return oldList[oldItemPosition].id==newList[newItemPosition].id
-    }
-
-    override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        val oldItem = oldList[oldItemPosition]
-        val newItem = newList[newItemPosition]
-        return oldItem == newItem
     }
 
 }
