@@ -41,8 +41,17 @@ class CurrentTasksViewModel(
     fun addToCompletedToday(id: Long) =
         currentScope.launch { completedTaskRepository.insertTaskId(id) }
 
-    fun returnFromToCompletedToday(id: Long) =
-        currentScope.launch { completedTaskRepository.deleteByTaskID(id) }
+    fun returnFromToCompletedToday(id: Long) {
+        currentScope.launch {
+            if (checkIfExists(id)) {
+                completedTaskRepository.deleteByTaskID(id)
+            }
+        }
+    }
+
+
+    suspend fun checkIfExists(id: Long) =
+        currentScope.async { completedTaskRepository.isExist(id) }.await()
 
     fun processCompleteTaskButton(id: Long) =
         currentScope.launch {
