@@ -2,6 +2,7 @@ package com.example.taskmaster.ui.activity.recyclerAdapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.taskmaster.databinding.ItemSubtaskBinding
@@ -16,11 +17,13 @@ class SubtaskRecyclerAdapter(
 
     private var subtaskList: MutableList<Task> = mutableListOf()
 
+    private var superTaskId: Long? = null
+
     inner class SubtaskViewHolder(private val itemBinding: ItemSubtaskBinding) :
         RecyclerView.ViewHolder(itemBinding.root) {
         fun bind(subtask: Task) {
             with(itemBinding) {
-                subtaskTagRecycler
+                subtaskTagRecycler //TODO()
                 subtaskDescription.text = subtask.description
                 subtaskCompletedButton.setOnClickListener{
                     delegate.onSubtaskCompletedButtonClick(subtask.id)
@@ -58,11 +61,22 @@ class SubtaskRecyclerAdapter(
         val subtask = subtaskList[position]
         holder.bind(subtask)
     }
-    fun setData(newList: List<Task>) {
+    fun setData(updateList: MutableMap<Long, LiveData<Task>>) {
+        val newList: MutableList<Task> = mutableListOf()
+        updateList.forEach{
+            if (it.key == superTaskId){
+                it.value.value?.let { it1 -> newList.add(it1) }
+            }
+
+        }
+
         val diffTask = TaskDiffCallback(subtaskList, newList)
         val result = DiffUtil.calculateDiff(diffTask)
         subtaskList.clear()
         subtaskList.addAll(newList)
         result.dispatchUpdatesTo(this)
+    }
+    fun setSupertaskId(id:Long){
+        superTaskId = id
     }
 }

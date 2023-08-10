@@ -1,9 +1,11 @@
 package com.example.taskmaster.ui.activity.recyclerAdapters
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.taskmaster.databinding.ItemTaskBinding
 import com.example.taskmaster.model.Task
@@ -13,7 +15,8 @@ import java.time.Period
 
 class TaskRecyclerAdapter(
     private val delegate: TaskClickDelegate,
-    private val subDelegate: SubtaskClickDelegate
+    private val subDelegate: SubtaskClickDelegate,
+    private val context: Context
 ) : RecyclerView.Adapter<TaskRecyclerAdapter.TaskViewHolder>() {
 
     private var taskList: MutableList<Task> = mutableListOf()
@@ -37,7 +40,11 @@ class TaskRecyclerAdapter(
 
                 }
                 taskTagRecycler.adapter = TagRecyclerAdapter()
+                taskTagRecycler.layoutManager = LinearLayoutManager(context)
+                taskTagRecycler.setItemViewCacheSize(4)
                 taskRecycler.adapter = SubtaskRecyclerAdapter(subDelegate)
+                taskRecycler.layoutManager = LinearLayoutManager(context)
+                taskRecycler.setItemViewCacheSize(2)
             }
         }
 

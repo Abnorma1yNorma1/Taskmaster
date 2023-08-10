@@ -58,6 +58,15 @@ interface TaskDao {
             "AND completed = :completed ")
     fun getCurrentTasksLiveData(date: Long, completed: Byte = FALSE): LiveData <List<Task>>
 
+    @Query("SELECT * FROM taskTable WHERE id = :id")
+    fun getTaskLiveData(id: Long): LiveData <Task>
+
+    @Query("SELECT * FROM taskTable WHERE superTask = :id")
+    fun getSubtasksOf(id: Long): List<Task>
+
+    @Query("SELECT * FROM taskTable WHERE superTask = :id")
+    fun getSubtasksLiveDataOf(id: Long): LiveData<List<Task>>
+
     @Query("SELECT * FROM taskTable")
     fun getAllTasks(): List<Task>
 

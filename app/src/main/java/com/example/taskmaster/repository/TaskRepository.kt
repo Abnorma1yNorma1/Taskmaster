@@ -1,5 +1,6 @@
 package com.example.taskmaster.repository
 
+import androidx.lifecycle.LiveData
 import com.example.taskmaster.database.dao.TaskDao
 import com.example.taskmaster.model.BooleanStandIn
 import com.example.taskmaster.model.Task
@@ -26,23 +27,31 @@ class TaskRepository(private val taskDao: TaskDao) {
         }.await()
     }
 
-    suspend fun getCurrentTasks(date:Long): List<Task> {
+    suspend fun getCurrentTasks(date: Long): List<Task> {
         return taskScope.async {
             taskDao.getCurrentTasks(date)
         }.await()
     }
 
-    fun getCurrentTasksLiveData(date:Long) = taskDao.getCurrentTasksLiveData(date)
+    fun getCurrentTasksLiveData(date: Long) = taskDao.getCurrentTasksLiveData(date)
 
-    suspend fun isComplete(id: Long):Boolean{
-       return taskScope.async { taskDao.getCompletedBool(id)==BooleanStandIn.TRUE.value}.await()
+    fun getTaskLiveData(id: Long) = taskDao.getTaskLiveData(id)
+
+    suspend fun getSubtasksOf(id: Long): List<Task> = taskScope.async {
+        taskDao.getSubtasksOf(id)
+    }.await()
+
+    fun getSubtasksLiveDataOf(id: Long): LiveData<List<Task>> = taskDao.getSubtasksLiveDataOf(id)
+
+    suspend fun isComplete(id: Long): Boolean {
+        return taskScope.async { taskDao.getCompletedBool(id) == BooleanStandIn.TRUE.value }.await()
     }
 
-    fun changeTaskCompletion(id: Long){
+    fun changeTaskCompletion(id: Long) {
         taskScope.launch {
-            if (isComplete(id)){
-                taskDao.updateCompleted(id,BooleanStandIn.FALSE.value)
-            }else taskDao.updateCompleted(id,BooleanStandIn.TRUE.value)
+            if (isComplete(id)) {
+                taskDao.updateCompleted(id, BooleanStandIn.FALSE.value)
+            } else taskDao.updateCompleted(id, BooleanStandIn.TRUE.value)
         }
     }
 

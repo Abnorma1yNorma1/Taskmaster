@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.taskmaster.R
 import com.example.taskmaster.repository.CompletedTaskRepository
 import com.example.taskmaster.ui.activity.recyclerAdapters.SubtaskClickDelegate
+import com.example.taskmaster.ui.activity.recyclerAdapters.SubtaskRecyclerAdapter
 import com.example.taskmaster.ui.activity.recyclerAdapters.TaskClickDelegate
 import com.example.taskmaster.ui.activity.recyclerAdapters.TaskRecyclerAdapter
 
@@ -25,11 +26,12 @@ class CurrentTasksActivity : AppCompatActivity(), TaskClickDelegate, SubtaskClic
         super.onCreate(savedInstanceState)
         binding = ActivityCurrentTaskBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        val adapter = TaskRecyclerAdapter(this, this)
+        val adapter = TaskRecyclerAdapter(this, this, this)
         viewModel = ViewModelProvider(
             this, CurrentTasksViewModelFactory(
                 TaskRepository(TaskmasterApp.INSTANCE.database.taskDao()),
-                CompletedTaskRepository(TaskmasterApp.INSTANCE.database.completedTasksDao())
+                CompletedTaskRepository(TaskmasterApp.INSTANCE.database.completedTasksDao()),
+                this
             )
         ).get(CurrentTasksViewModel::class.java)
         with(binding) {
@@ -38,11 +40,23 @@ class CurrentTasksActivity : AppCompatActivity(), TaskClickDelegate, SubtaskClic
             taskRecycleView.setItemViewCacheSize(2)
             setSupportActionBar(toolbar)
 
+
         }
-        viewModel.getCurrentTasks().observe(this) { tasks ->
+        viewModel.getCurrentTasksLive().observe(this) { tasks ->
             adapter.setData(tasks)
+            viewModel.setSubtaskMap()
             adapter.notifyDataSetChanged()
         }
+        viewModel.getCurrentSubtasks().forEach{mapEntry ->
+            mapEntry.value.observe(this){
+                with((binding.taskRecycleView.adapter as SubtaskRecyclerAdapter)) {
+                    setData(viewModel.getCurrentSubtasks())
+                    setSupertaskId(mapEntry.key)
+                    notifyDataSetChanged()
+                }
+            }
+        }
+
 
 
     }
