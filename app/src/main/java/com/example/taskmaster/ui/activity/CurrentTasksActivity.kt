@@ -12,12 +12,11 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.taskmaster.R
 import com.example.taskmaster.repository.CompletedTaskRepository
-import com.example.taskmaster.ui.activity.recyclerAdapters.SubtaskClickDelegate
 import com.example.taskmaster.ui.activity.recyclerAdapters.SubtaskRecyclerAdapter
 import com.example.taskmaster.ui.activity.recyclerAdapters.TaskClickDelegate
 import com.example.taskmaster.ui.activity.recyclerAdapters.TaskRecyclerAdapter
 
-class CurrentTasksActivity : AppCompatActivity(), TaskClickDelegate, SubtaskClickDelegate {
+class CurrentTasksActivity : AppCompatActivity(), TaskClickDelegate {
 
     private lateinit var binding: ActivityCurrentTaskBinding
     private lateinit var viewModel: CurrentTasksViewModel
@@ -26,7 +25,7 @@ class CurrentTasksActivity : AppCompatActivity(), TaskClickDelegate, SubtaskClic
         super.onCreate(savedInstanceState)
         binding = ActivityCurrentTaskBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        val adapter = TaskRecyclerAdapter(this, this, this)
+        val adapter = TaskRecyclerAdapter(this, this)
         viewModel = ViewModelProvider(
             this, CurrentTasksViewModelFactory(
                 TaskRepository(TaskmasterApp.INSTANCE.database.taskDao()),
@@ -47,16 +46,11 @@ class CurrentTasksActivity : AppCompatActivity(), TaskClickDelegate, SubtaskClic
             viewModel.setSubtaskMap()
             adapter.notifyDataSetChanged()
         }
-        viewModel.getCurrentSubtasks().forEach{mapEntry ->
-            mapEntry.value.observe(this){
-                with((binding.taskRecycleView.adapter as SubtaskRecyclerAdapter)) {
-                    notifyDataSetChanged()
-                }
+        viewModel.getCurrentSubtasks().forEach { mapEntry ->
+            mapEntry.value.observe(this) {
+                (binding.taskRecycleView.adapter as SubtaskRecyclerAdapter).notifyDataSetChanged()
             }
         }
-
-
-
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
@@ -88,15 +82,7 @@ class CurrentTasksActivity : AppCompatActivity(), TaskClickDelegate, SubtaskClic
 
     override fun onTaskCompletedButtonClick(id: Long) {
         viewModel.processCompleteTaskButton(id)
-//        TODO("Not yet implemented completed task date storage")
+//        TODO(" completed task date storage")
     }
 
-    override fun onTaskExpandButton(id: Long) {
-        viewModel
-        TODO("Not yet implemented")
-    }
-
-    override fun onSubtaskCompletedButtonClick(id: Long) {
-        TODO("Not yet implemented")
-    }
 }

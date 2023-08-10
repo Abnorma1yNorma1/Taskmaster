@@ -13,7 +13,8 @@
         app:cardBackgroundColor="@color/material_dynamic_tertiary90"
         app:cardCornerRadius="10dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        android:focusable="true">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/subtask_tag_recycler"

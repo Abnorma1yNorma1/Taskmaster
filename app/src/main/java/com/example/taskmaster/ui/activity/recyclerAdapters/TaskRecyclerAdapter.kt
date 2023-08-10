@@ -16,7 +16,7 @@ import java.time.Period
 
 class TaskRecyclerAdapter(
     private val delegate: TaskClickDelegate,
-    private val subDelegate: SubtaskClickDelegate,
+
     private val context: Context
 ) : RecyclerView.Adapter<TaskRecyclerAdapter.TaskViewHolder>() {
 
@@ -45,7 +45,7 @@ class TaskRecyclerAdapter(
                 taskTagRecycler.adapter = TagRecyclerAdapter()
                 taskTagRecycler.layoutManager = LinearLayoutManager(context)
                 taskTagRecycler.setItemViewCacheSize(4)
-                taskRecycler.adapter = SubtaskRecyclerAdapter(subDelegate)
+                taskRecycler.adapter = SubtaskRecyclerAdapter(delegate)
                 taskRecycler.layoutManager = LinearLayoutManager(context)
                 taskRecycler.setItemViewCacheSize(2)
                 val newList: MutableList<Task> = mutableListOf()

@@ -12,7 +12,7 @@ import java.time.LocalDate
 import java.time.Period
 
 class SubtaskRecyclerAdapter(
-    private val delegate: SubtaskClickDelegate
+    private val delegate: TaskClickDelegate
 ) : RecyclerView.Adapter<SubtaskRecyclerAdapter.SubtaskViewHolder>() {
 
     private var subtaskList: MutableList<Task> = mutableListOf()
@@ -24,7 +24,7 @@ class SubtaskRecyclerAdapter(
                 subtaskTagRecycler //TODO()
                 subtaskDescription.text = subtask.description
                 subtaskCompletedButton.setOnClickListener{
-                    delegate.onSubtaskCompletedButtonClick(subtask.id)
+                    delegate.onTaskCompletedButtonClick(subtask.id)
                 }
                 subtaskPriority.text = subtask.priority.toString()
                 subtaskTimeLeftText.text = untilTaskEnd(subtask)
