@@ -30,14 +30,14 @@ class CurrentTasksActivity : AppCompatActivity(), TaskClickDelegate, SubtaskClic
         viewModel = ViewModelProvider(
             this, CurrentTasksViewModelFactory(
                 TaskRepository(TaskmasterApp.INSTANCE.database.taskDao()),
-                CompletedTaskRepository(TaskmasterApp.INSTANCE.database.completedTasksDao()),
-                this
+                CompletedTaskRepository(TaskmasterApp.INSTANCE.database.completedTasksDao())
             )
         ).get(CurrentTasksViewModel::class.java)
         with(binding) {
             taskRecycleView.layoutManager = LinearLayoutManager(this@CurrentTasksActivity)
             taskRecycleView.adapter = adapter
             taskRecycleView.setItemViewCacheSize(2)
+            (taskRecycleView.adapter as TaskRecyclerAdapter).setSubtaskList(viewModel.getCurrentSubtasks())
             setSupportActionBar(toolbar)
 
 
@@ -50,8 +50,6 @@ class CurrentTasksActivity : AppCompatActivity(), TaskClickDelegate, SubtaskClic
         viewModel.getCurrentSubtasks().forEach{mapEntry ->
             mapEntry.value.observe(this){
                 with((binding.taskRecycleView.adapter as SubtaskRecyclerAdapter)) {
-                    setData(viewModel.getCurrentSubtasks())
-                    setSupertaskId(mapEntry.key)
                     notifyDataSetChanged()
                 }
             }

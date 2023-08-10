@@ -17,8 +17,6 @@ class SubtaskRecyclerAdapter(
 
     private var subtaskList: MutableList<Task> = mutableListOf()
 
-    private var superTaskId: Long? = null
-
     inner class SubtaskViewHolder(private val itemBinding: ItemSubtaskBinding) :
         RecyclerView.ViewHolder(itemBinding.root) {
         fun bind(subtask: Task) {
@@ -61,22 +59,11 @@ class SubtaskRecyclerAdapter(
         val subtask = subtaskList[position]
         holder.bind(subtask)
     }
-    fun setData(updateList: MutableMap<Long, LiveData<Task>>) {
-        val newList: MutableList<Task> = mutableListOf()
-        updateList.forEach{
-            if (it.key == superTaskId){
-                it.value.value?.let { it1 -> newList.add(it1) }
-            }
-
-        }
-
+    fun setData(newList: MutableList<Task>) {
         val diffTask = TaskDiffCallback(subtaskList, newList)
         val result = DiffUtil.calculateDiff(diffTask)
         subtaskList.clear()
         subtaskList.addAll(newList)
         result.dispatchUpdatesTo(this)
-    }
-    fun setSupertaskId(id:Long){
-        superTaskId = id
     }
 }

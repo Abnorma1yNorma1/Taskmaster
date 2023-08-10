@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -20,6 +21,8 @@ class TaskRecyclerAdapter(
 ) : RecyclerView.Adapter<TaskRecyclerAdapter.TaskViewHolder>() {
 
     private var taskList: MutableList<Task> = mutableListOf()
+
+    private var subtaskList: MutableMap<Long, LiveData<Task>> = mutableMapOf()
 
     inner class TaskViewHolder(private val itemBinding: ItemTaskBinding) :
         RecyclerView.ViewHolder(itemBinding.root) {
@@ -45,6 +48,14 @@ class TaskRecyclerAdapter(
                 taskRecycler.adapter = SubtaskRecyclerAdapter(subDelegate)
                 taskRecycler.layoutManager = LinearLayoutManager(context)
                 taskRecycler.setItemViewCacheSize(2)
+                val newList: MutableList<Task> = mutableListOf()
+                subtaskList.forEach { mapEntry ->
+                    if (mapEntry.key == task.id) {
+                        mapEntry.value.value?.let { newList.add(it) }
+                    }
+                }
+
+                (taskRecycler.adapter as SubtaskRecyclerAdapter).setData(newList)
             }
         }
 
@@ -83,6 +94,10 @@ class TaskRecyclerAdapter(
         taskList.clear()
         taskList.addAll(newList)
         result.dispatchUpdatesTo(this)
+    }
+
+    fun setSubtaskList(list: MutableMap<Long, LiveData<Task>>) {
+        subtaskList = list
     }
 
 }

@@ -1,6 +1,5 @@
 package com.example.taskmaster.ui.activity.viewModel
 
-import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -16,8 +15,7 @@ import java.time.Clock
 
 class CurrentTasksViewModel(
     private val taskRepository: TaskRepository,
-    private val completedTaskRepository: CompletedTaskRepository,
-    private val context: Context
+    private val completedTaskRepository: CompletedTaskRepository
 ) : ViewModel() {
 
     private val job = SupervisorJob()
@@ -55,16 +53,16 @@ class CurrentTasksViewModel(
         }
 
 
-    fun changeTaskCompletion(id: Long) =
+    private fun changeTaskCompletion(id: Long) =
         currentScope.launch { taskRepository.changeTaskCompletion(id) }
 
-    suspend fun isTaskComplete(id: Long) =
+    private suspend fun isTaskComplete(id: Long) =
         currentScope.async { taskRepository.isComplete(id) }.await()
 
-    fun addToCompletedToday(id: Long) =
+    private fun addToCompletedToday(id: Long) =
         currentScope.launch { completedTaskRepository.insertTaskId(id) }
 
-    fun returnFromToCompletedToday(id: Long) {
+    private fun returnFromToCompletedToday(id: Long) {
         currentScope.launch {
             if (checkIfExists(id)) {
                 completedTaskRepository.deleteByTaskID(id)
@@ -73,7 +71,7 @@ class CurrentTasksViewModel(
     }
 
 
-    suspend fun checkIfExists(id: Long) =
+    private suspend fun checkIfExists(id: Long) =
         currentScope.async { completedTaskRepository.isExist(id) }.await()
 
     fun processCompleteTaskButton(id: Long) =
@@ -91,12 +89,11 @@ class CurrentTasksViewModel(
 
 class CurrentTasksViewModelFactory(
     private val repository: TaskRepository,
-    private val completedTaskRepository: CompletedTaskRepository,
-    private val context: Context
+    private val completedTaskRepository: CompletedTaskRepository
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(CurrentTasksViewModel::class.java)) {
-            return CurrentTasksViewModel(repository, completedTaskRepository, context) as T
+            return CurrentTasksViewModel(repository, completedTaskRepository) as T
         }
         throw java.lang.IllegalArgumentException("Unknown viewModel!")
     }
