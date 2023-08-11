@@ -32,4 +32,10 @@ class CompletedTaskRepository(private val completedTaskDao: CompletedTasksDao) {
         }.await()
     }
 
+    fun deleteAll(){
+        taskScope.launch {
+            completedTaskDao.deleteAll()
+        }
+    }
+
 }

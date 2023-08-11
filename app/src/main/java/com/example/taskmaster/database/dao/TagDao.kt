@@ -18,6 +18,9 @@ interface TagDao {
     @Query("SELECT * FROM tagTable WHERE id = :id")
     fun getTag(id: Int): Tag
 
+    @Query("SELECT * FROM tagTable WHERE tagName = :tagName")
+    fun getTagIdByName(tagName: String): Int
+
     @Query("SELECT * FROM tagTable")
     fun getAll(): List<Tag>
 

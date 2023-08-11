@@ -3,6 +3,7 @@ package com.example.taskmaster.repository
 import androidx.lifecycle.LiveData
 import com.example.taskmaster.database.dao.TaskDao
 import com.example.taskmaster.model.BooleanStandIn
+import com.example.taskmaster.model.Tag
 import com.example.taskmaster.model.Task
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -15,7 +16,7 @@ class TaskRepository(private val taskDao: TaskDao) {
     private val job = SupervisorJob()
     private val taskScope = CoroutineScope(job + Dispatchers.IO)
 
-    suspend fun insertTask(task: Task) {
+    fun insertTask(task: Task) {
         taskScope.launch {
             taskDao.insert(task)
         }
@@ -41,6 +42,8 @@ class TaskRepository(private val taskDao: TaskDao) {
         taskDao.getSubtasksOf(id)
     }.await()
 
+    suspend fun getTags(id: Long):List<Int> = taskScope.async { taskDao.getTags(id) }.await()
+
     fun getSubtasksLiveDataOf(id: Long): LiveData<List<Task>> = taskDao.getSubtasksLiveDataOf(id)
 
     suspend fun isComplete(id: Long): Boolean {
@@ -55,7 +58,7 @@ class TaskRepository(private val taskDao: TaskDao) {
         }
     }
 
-    suspend fun deleteAllTasks() {
+    fun deleteAllTasks() {
         taskScope.launch {
             taskDao.deleteAll()
         }

@@ -1,29 +1,45 @@
 package com.example.taskmaster.ui.activity.recyclerAdapters
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.taskmaster.databinding.ItemSubtaskBinding
+import com.example.taskmaster.model.Tag
 import com.example.taskmaster.model.Task
 import java.time.Clock
 import java.time.LocalDate
 import java.time.Period
 
 class SubtaskRecyclerAdapter(
-    private val delegate: TaskClickDelegate
+    private val delegate: TaskClickDelegate,
+    private val context: Context
 ) : RecyclerView.Adapter<SubtaskRecyclerAdapter.SubtaskViewHolder>() {
 
     private var subtaskList: MutableList<Task> = mutableListOf()
+    private var subTagList: MutableMap<Long, List<Tag>> = mutableMapOf()
 
     inner class SubtaskViewHolder(private val itemBinding: ItemSubtaskBinding) :
         RecyclerView.ViewHolder(itemBinding.root) {
         fun bind(subtask: Task) {
             with(itemBinding) {
-                subtaskTagRecycler //TODO()
+                subtaskTagRecycler.adapter = TagRecyclerAdapter()
+                subtaskTagRecycler.layoutManager = LinearLayoutManager(context)
+                subtaskTagRecycler.setItemViewCacheSize(4)
+                val newTagList: MutableList<Tag> = mutableListOf()
+                subTagList.forEach { mapEntry ->
+                    if (mapEntry.key == subtask.id) {
+                        mapEntry.value.let {
+                            it.forEach { it1 -> newTagList.add(it1) }
+                        }
+                    }
+                }
+                (subtaskTagRecycler.adapter as TagRecyclerAdapter).setData(newTagList)
+
                 subtaskDescription.text = subtask.description
-                subtaskCompletedButton.setOnClickListener{
+                subtaskCompletedButton.setOnClickListener {
                     delegate.onTaskCompletedButtonClick(subtask.id)
                 }
                 subtaskPriority.text = subtask.priority.toString()
@@ -31,6 +47,7 @@ class SubtaskRecyclerAdapter(
             }
 
         }
+
         private fun untilTaskEnd(subtask: Task): String {
             return if (subtask.expirationDate == null) {
                 "-"
@@ -59,11 +76,16 @@ class SubtaskRecyclerAdapter(
         val subtask = subtaskList[position]
         holder.bind(subtask)
     }
+
     fun setData(newList: MutableList<Task>) {
         val diffTask = TaskDiffCallback(subtaskList, newList)
         val result = DiffUtil.calculateDiff(diffTask)
         subtaskList.clear()
         subtaskList.addAll(newList)
         result.dispatchUpdatesTo(this)
+    }
+
+    fun setSubTagList(list:MutableMap<Long, List<Tag>>){
+        subTagList = list
     }
 }

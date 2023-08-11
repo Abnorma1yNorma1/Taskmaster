@@ -1,11 +1,16 @@
 package com.example.taskmaster.ui.activity.viewModel
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.example.taskmaster.model.Tag
 import com.example.taskmaster.model.Task
 import com.example.taskmaster.repository.CompletedTaskRepository
+import com.example.taskmaster.repository.TagRepository
 import com.example.taskmaster.repository.TaskRepository
+import com.example.taskmaster.repository.TimePeriodRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -15,7 +20,9 @@ import java.time.Clock
 
 class CurrentTasksViewModel(
     private val taskRepository: TaskRepository,
-    private val completedTaskRepository: CompletedTaskRepository
+    private val completedTaskRepository: CompletedTaskRepository,
+    private val tagRepository: TagRepository,
+    private val timePeriodRepository: TimePeriodRepository
 ) : ViewModel() {
 
     private val job = SupervisorJob()
@@ -24,34 +31,92 @@ class CurrentTasksViewModel(
     private val currentTasksLive: LiveData<List<Task>> =
         taskRepository.getCurrentTasksLiveData(getCurrentTime())
 
-    private val currentSubtasks: MutableMap<Long, LiveData<Task>> = mutableMapOf()
+    private val currentSubtasks: MutableMap<Long, List<Task>> = mutableMapOf()
+    lateinit var currentSubtasksMediator: MutableLiveData<Map<Long, List<Task>>>
+
+    private val currentTags: MutableMap<Long, List<Tag>> = mutableMapOf()
+    lateinit var currentTagMediator: MutableLiveData<Map<Long, List<Tag>>>
+
+    private val currentSubTags: MutableMap<Long, List<Tag>> = mutableMapOf()
+    lateinit var currentSubTagMediator: MutableLiveData<Map<Long, List<Tag>>>
 
     private fun getCurrentTime(): Long {
         return Clock.systemUTC().millis()
+    }
+
+
+    fun setCurrentSubtasks() {
+        val mediator = MediatorLiveData<Map<Long, List<Task>>>()
+        mediator.addSource(currentTasksLive) {
+            currentSubtasks.clear()
+            it.forEach { listEntry ->
+                currentScope.launch {
+                    currentSubtasks[listEntry.id] =
+                        currentScope.async { taskRepository.getSubtasksOf(listEntry.id) }.await()
+                }
+            }
+        }
+        currentSubtasksMediator = mediator
+    }
+
+    fun setCurrentTag() {
+        val mediator = MediatorLiveData<Map<Long, List<Tag>>>()
+        mediator.addSource(currentTasksLive) {
+            currentTags.clear()
+            it.forEach { listEntry ->
+                currentScope.launch {
+                    currentTags[listEntry.id] =
+                        currentScope.async {
+                            val tagList = mutableListOf<Tag>()
+                            taskRepository.getTags(listEntry.id).forEach { tagId ->
+                                tagList.add(tagRepository.getTag(tagId))
+                            }
+                            tagList
+                        }.await()
+                }
+            }
+        }
+        currentTagMediator = mediator
+    }
+
+    fun setCurrentSubTags() {
+        val mediator = MediatorLiveData<Map<Long, List<Tag>>>()
+        mediator.addSource(currentSubtasksMediator) {
+            currentSubTags.clear()
+            it.forEach { mapEntry ->
+                mapEntry.value.forEach { listEntry ->
+                    currentScope.launch {
+                        currentSubTags[listEntry.id] =
+                            currentScope.async {
+                                val tagList = mutableListOf<Tag>()
+                                taskRepository.getTags(listEntry.id).forEach { tagId ->
+                                    tagList.add(tagRepository.getTag(tagId))
+                                }
+                                tagList
+                            }.await()
+                    }
+                }
+
+            }
+        }
+        currentTagMediator = mediator
     }
 
     fun getCurrentTasksLive(): LiveData<List<Task>> {
         return currentTasksLive
     }
 
-    fun getCurrentSubtasks(): MutableMap<Long, LiveData<Task>> {
+    fun getCurrentSubtasks(): MutableMap<Long, List<Task>> {
         return currentSubtasks
     }
 
-    private suspend fun getCurrentTasks(): List<Task> {
-        return currentScope.async { taskRepository.getCurrentTasks(getCurrentTime()) }.await()
+    fun getCurrentTag(): MutableMap<Long, List<Tag>> {
+        return currentTags
     }
 
-    fun setSubtaskMap() =
-        currentScope.launch {
-            currentTasksLive.value?.forEach { task: Task ->
-                taskRepository.getSubtasksLiveDataOf(task.id).value?.forEach {
-                    currentSubtasks.put(task.id, taskRepository.getTaskLiveData(it.id))
-                }
-            }
-
-        }
-
+    fun getCurrentSubTag(): MutableMap<Long, List<Tag>> {
+        return currentSubTags
+    }
 
     private fun changeTaskCompletion(id: Long) =
         currentScope.launch { taskRepository.changeTaskCompletion(id) }
@@ -89,11 +154,13 @@ class CurrentTasksViewModel(
 
 class CurrentTasksViewModelFactory(
     private val repository: TaskRepository,
-    private val completedTaskRepository: CompletedTaskRepository
+    private val completedTaskRepository: CompletedTaskRepository,
+    private val tagRepository: TagRepository,
+    private val timePeriodRepository: TimePeriodRepository
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(CurrentTasksViewModel::class.java)) {
-            return CurrentTasksViewModel(repository, completedTaskRepository) as T
+            return CurrentTasksViewModel(repository, completedTaskRepository,tagRepository, timePeriodRepository) as T
         }
         throw java.lang.IllegalArgumentException("Unknown viewModel!")
     }

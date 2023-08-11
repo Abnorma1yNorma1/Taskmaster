@@ -12,7 +12,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.taskmaster.R
 import com.example.taskmaster.repository.CompletedTaskRepository
-import com.example.taskmaster.ui.activity.recyclerAdapters.SubtaskRecyclerAdapter
+import com.example.taskmaster.repository.TagRepository
+import com.example.taskmaster.repository.TimePeriodRepository
 import com.example.taskmaster.ui.activity.recyclerAdapters.TaskClickDelegate
 import com.example.taskmaster.ui.activity.recyclerAdapters.TaskRecyclerAdapter
 
@@ -29,26 +30,29 @@ class CurrentTasksActivity : AppCompatActivity(), TaskClickDelegate {
         viewModel = ViewModelProvider(
             this, CurrentTasksViewModelFactory(
                 TaskRepository(TaskmasterApp.INSTANCE.database.taskDao()),
-                CompletedTaskRepository(TaskmasterApp.INSTANCE.database.completedTasksDao())
+                CompletedTaskRepository(TaskmasterApp.INSTANCE.database.completedTasksDao()),
+                TagRepository(TaskmasterApp.INSTANCE.database.tagDao()),
+                TimePeriodRepository(TaskmasterApp.INSTANCE.database.timePeriodDao())
             )
         ).get(CurrentTasksViewModel::class.java)
         with(binding) {
             taskRecycleView.layoutManager = LinearLayoutManager(this@CurrentTasksActivity)
             taskRecycleView.adapter = adapter
             taskRecycleView.setItemViewCacheSize(2)
-            (taskRecycleView.adapter as TaskRecyclerAdapter).setSubtaskList(viewModel.getCurrentSubtasks())
             setSupportActionBar(toolbar)
-
-
         }
         viewModel.getCurrentTasksLive().observe(this) { tasks ->
             adapter.setData(tasks)
-            viewModel.setSubtaskMap()
-            adapter.notifyDataSetChanged()
+            viewModel.setCurrentSubtasks()
+            viewModel.setCurrentTag()
         }
-        viewModel.getCurrentSubtasks().forEach { mapEntry ->
-            mapEntry.value.observe(this) {
-                (binding.taskRecycleView.adapter as SubtaskRecyclerAdapter).notifyDataSetChanged()
+        viewModel.currentSubtasksMediator.observe(this) {
+            viewModel.setCurrentSubTags()
+            with(adapter) {
+                setSubtaskList(viewModel.getCurrentSubtasks())
+                setTagList(viewModel.getCurrentTag())
+                setSubTagList(viewModel.getCurrentSubTag())
+                notifyDataSetChanged()
             }
         }
     }

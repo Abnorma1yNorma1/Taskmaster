@@ -30,10 +30,13 @@ interface TaskDao {
     fun updatePriority(id: Long, priority: Byte)
 
     @Query("UPDATE taskTable SET tagList = :tagList WHERE id = :id")
-    fun updateTagList(id: Long, tagList: String)
+    fun updateTagList(id: Long, tagList: List<Int>)
+
+    @Query("SELECT tagList FROM taskTable WHERE id = :id")
+    fun getTags(id:Long): List<Int>
 
     @Query("SELECT * FROM taskTable WHERE tagList LIKE :tagQuery")
-    fun getTaskIdByMatchingTag(tagQuery: String): Long
+    fun getTaskIdByMatchingTags(tagQuery: List<Int>): List<Task>
 
     @Query("UPDATE taskTable SET expirationDate = :expirationDate WHERE id = :id")
     fun updateExpirationDate(id: Long, expirationDate: Long?)
@@ -55,8 +58,9 @@ interface TaskDao {
     fun getCurrentTasks(date: Long, completed: Byte = FALSE): List<Task>
 
     @Query("SELECT * FROM taskTable WHERE expirationDate < :date " +
-            "AND completed = :completed ")
+            "AND completed = :completed AND superTask IS NULL ")
     fun getCurrentTasksLiveData(date: Long, completed: Byte = FALSE): LiveData <List<Task>>
+
 
     @Query("SELECT * FROM taskTable WHERE id = :id")
     fun getTaskLiveData(id: Long): LiveData <Task>
