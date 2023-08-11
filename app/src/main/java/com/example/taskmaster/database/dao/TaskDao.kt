@@ -33,7 +33,7 @@ interface TaskDao {
     fun updateTagList(id: Long, tagList: List<Int>)
 
     @Query("SELECT tagList FROM taskTable WHERE id = :id")
-    fun getTags(id:Long): List<Int>
+    fun getTagsAsString(id:Long): String
 
     @Query("SELECT * FROM taskTable WHERE tagList LIKE :tagQuery")
     fun getTaskIdByMatchingTags(tagQuery: List<Int>): List<Task>

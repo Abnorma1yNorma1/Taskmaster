@@ -41,6 +41,7 @@ class CurrentTasksActivity : AppCompatActivity(), TaskClickDelegate {
             taskRecycleView.setItemViewCacheSize(2)
             setSupportActionBar(toolbar)
         }
+        viewModel.setCurrentSubtasks()  //TODO(safe to delete+-)
         viewModel.getCurrentTasksLive().observe(this) { tasks ->
             adapter.setData(tasks)
             viewModel.setCurrentSubtasks()

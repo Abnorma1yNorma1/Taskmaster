@@ -42,7 +42,11 @@ class TaskRepository(private val taskDao: TaskDao) {
         taskDao.getSubtasksOf(id)
     }.await()
 
-    suspend fun getTags(id: Long):List<Int> = taskScope.async { taskDao.getTags(id) }.await()
+    suspend fun getTags(id: Long):List<Int> = taskScope.async {
+        if (taskDao.getTagsAsString(id).isNotEmpty()) {
+            mutableListOf()
+        } else taskDao.getTagsAsString(id).split(",").map { it.toInt() }.toMutableList()
+    }.await()
 
     fun getSubtasksLiveDataOf(id: Long): LiveData<List<Task>> = taskDao.getSubtasksLiveDataOf(id)
 

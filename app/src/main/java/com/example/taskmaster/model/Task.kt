@@ -15,7 +15,6 @@ data class Task(
     var description: String,
     var completed: Byte = BooleanStandIn.FALSE.value,
     var priority: Byte = 0,
-    @TypeConverters(TaskTypeConverters::class)
     var tagList: MutableList<Int> = mutableListOf(),
     var expirationDate: Long? = null,
     var notify: Byte = BooleanStandIn.FALSE.value,

@@ -2,17 +2,23 @@ package com.example.taskmaster.database
 
 import androidx.room.ProvidedTypeConverter
 import androidx.room.TypeConverter
+import androidx.room.TypeConverters
 
 @ProvidedTypeConverter
 class TaskTypeConverters {
     @TypeConverter
     fun intListToString(list: List<Int>): String {
-        return list.joinToString(",")
+        return if (list.isNotEmpty()) {
+            ""
+        } else list.joinToString(",")
     }
 
     @TypeConverter
     fun stringToIntList(string: String): MutableList<Int> {
-        return string.split(",").map { it.toInt() }.toMutableList()
+        return if (string.isNotEmpty()) {
+            mutableListOf()
+        } else string.split(",").map { it.toInt() }.toMutableList()
+
     }
 
 }
