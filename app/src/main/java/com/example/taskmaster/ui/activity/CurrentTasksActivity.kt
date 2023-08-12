@@ -12,16 +12,16 @@ import androidx.appcompat.app.ActionBar
 import com.example.taskmaster.TaskmasterApp
 import com.example.taskmaster.databinding.ActivityCurrentTaskBinding
 import com.example.taskmaster.repository.TaskRepository
-import com.example.taskmaster.ui.activity.viewModel.CurrentTasksViewModel
-import com.example.taskmaster.ui.activity.viewModel.CurrentTasksViewModelFactory
+import com.example.taskmaster.ui.viewModel.CurrentTasksViewModel
+import com.example.taskmaster.ui.viewModel.CurrentTasksViewModelFactory
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.taskmaster.R
 import com.example.taskmaster.repository.CompletedTaskRepository
 import com.example.taskmaster.repository.TagRepository
 import com.example.taskmaster.repository.TimePeriodRepository
-import com.example.taskmaster.ui.activity.recyclerAdapters.TaskClickDelegate
-import com.example.taskmaster.ui.activity.recyclerAdapters.TaskRecyclerAdapter
+import com.example.taskmaster.ui.recyclerAdapters.TaskClickDelegate
+import com.example.taskmaster.ui.recyclerAdapters.TaskRecyclerAdapter
 
 class CurrentTasksActivity : AppCompatActivity(), TaskClickDelegate {
 

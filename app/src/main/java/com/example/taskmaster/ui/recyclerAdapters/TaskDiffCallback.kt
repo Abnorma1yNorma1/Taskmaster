@@ -1,4 +1,4 @@
-package com.example.taskmaster.ui.activity.recyclerAdapters
+package com.example.taskmaster.ui.recyclerAdapters
 
 import androidx.recyclerview.widget.DiffUtil
 import com.example.taskmaster.model.Task

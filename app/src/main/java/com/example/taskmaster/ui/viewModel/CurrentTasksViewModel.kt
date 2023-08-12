@@ -1,4 +1,4 @@
-package com.example.taskmaster.ui.activity.viewModel
+package com.example.taskmaster.ui.viewModel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData

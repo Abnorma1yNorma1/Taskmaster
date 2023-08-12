@@ -1,4 +1,4 @@
-package com.example.taskmaster.ui.activity.recyclerAdapters
+package com.example.taskmaster.ui.recyclerAdapters
 
 import android.content.Context
 import android.view.LayoutInflater

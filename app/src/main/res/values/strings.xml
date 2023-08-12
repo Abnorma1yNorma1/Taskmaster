@@ -7,4 +7,11 @@
     <string name="show_completed">show completed</string>
     <string name="expand_button">expand button</string>
     <string name="add_button">add button</string>
+    <string name="tabs">tabs</string>
+    <string name="task">task</string>
+    <string name="tag">tag</string>
+    <string name="period">period</string>
+    <string name="page">Page</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
