@@ -10,10 +10,11 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:backgroundTint="@color/design_default_color_secondary_variant"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:menu="@menu/current_tasks_toolbar"
+        >
 
     </androidx.appcompat.widget.Toolbar>
 
@@ -25,5 +26,6 @@
         app:layout_constraintTop_toBottomOf="@+id/toolbar"
         app:layout_constraintBottom_toBottomOf="parent"
         tools:layout_editor_absoluteX="1dp"
-        android:orientation="vertical"/>
+        android:orientation="vertical"
+        tools:listitem="@layout/item_task"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

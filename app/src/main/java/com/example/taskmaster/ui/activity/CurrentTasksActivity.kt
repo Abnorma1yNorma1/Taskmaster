@@ -1,8 +1,13 @@
 package com.example.taskmaster.ui.activity
 
+import android.annotation.SuppressLint
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
 import android.view.MenuItem
+import androidx.appcompat.app.ActionBar
 import com.example.taskmaster.TaskmasterApp
 import com.example.taskmaster.databinding.ActivityCurrentTaskBinding
 import com.example.taskmaster.repository.TaskRepository
@@ -39,7 +44,7 @@ class CurrentTasksActivity : AppCompatActivity(), TaskClickDelegate {
             taskRecycleView.layoutManager = LinearLayoutManager(this@CurrentTasksActivity)
             taskRecycleView.adapter = adapter
             taskRecycleView.setItemViewCacheSize(2)
-            setSupportActionBar(toolbar)
+//            setSupportActionBar(toolbar)
         }
         viewModel.setCurrentSubtasks()  //TODO(safe to delete+-)
         viewModel.getCurrentTasksLive().observe(this) { tasks ->
@@ -56,6 +61,13 @@ class CurrentTasksActivity : AppCompatActivity(), TaskClickDelegate {
                 notifyDataSetChanged()
             }
         }
+        setSupportActionBar(binding.toolbar)
+        supportActionBar?.setBackgroundDrawable(ColorDrawable(Color.parseColor("#6200EE")))
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.current_tasks_toolbar,menu)
+        return super.onCreateOptionsMenu(menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
