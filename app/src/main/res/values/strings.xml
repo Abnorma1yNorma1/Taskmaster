@@ -6,4 +6,5 @@
     <string name="preferences">preferences</string>
     <string name="show_completed">show completed</string>
     <string name="expand_button">expand button</string>
+    <string name="add_button">add button</string>
 </resources>

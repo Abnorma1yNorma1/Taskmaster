@@ -3,6 +3,12 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
+        android:id="@+id/add_button"
+        android:icon="@drawable/plus"
+        android:iconTint="@color/material_dynamic_neutral100"
+        android:title="@string/add_button"
+        app:showAsAction="always" />
+    <item
         android:id="@+id/zoom_out_button"
         android:title="@string/zoom_out_button"
         app:showAsAction="always"

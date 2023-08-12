@@ -1,6 +1,7 @@
 package com.example.taskmaster.ui.activity
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import androidx.appcompat.app.AppCompatActivity
@@ -71,6 +72,13 @@ class CurrentTasksActivity : AppCompatActivity(), TaskClickDelegate {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
+
+        R.id.add_button -> {
+            val intent: Intent = Intent(this, EditActivity::class.java)
+//            intent.putExtra("tab",1)
+            startActivity(intent)
+            true
+        }
 
         R.id.zoom_out_button -> {
             true
