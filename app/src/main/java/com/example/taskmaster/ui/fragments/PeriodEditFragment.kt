@@ -37,7 +37,7 @@ class PeriodEditFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         arguments?.takeIf { it.containsKey(EditAdapter.POSITION) }?.apply {
-            binding.periodEditTextForTesting.text = getInt(EditAdapter.POSITION).toString()
+//            binding.periodEditTextForTesting.text = getInt(EditAdapter.POSITION).toString()
         }
         super.onViewCreated(view, savedInstanceState)
     }

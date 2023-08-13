@@ -36,7 +36,7 @@ class TaskEditFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         arguments?.takeIf { it.containsKey(EditAdapter.POSITION) }?.apply {
-            binding.taskEditTextForTesting.text = getInt(EditAdapter.POSITION).toString()
+//            binding.taskEditTextForTesting.text = getInt(EditAdapter.POSITION).toString()
         }
         super.onViewCreated(view, savedInstanceState)
     }

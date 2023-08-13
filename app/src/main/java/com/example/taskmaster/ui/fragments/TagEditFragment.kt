@@ -36,7 +36,7 @@ class TagEditFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         arguments?.takeIf { it.containsKey(EditAdapter.POSITION) }?.apply {
-            binding.tagEditTextForTesting.text = getInt(EditAdapter.POSITION).toString()
+//            binding.tagEditTextForTesting.text = getInt(EditAdapter.POSITION).toString()
         }
         super.onViewCreated(view, savedInstanceState)
     }
