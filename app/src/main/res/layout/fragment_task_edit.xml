@@ -129,23 +129,22 @@
 
 
     <HorizontalScrollView
+        android:id="@+id/horizontalScrollView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         app:layout_constraintEnd_toStartOf="@id/right_border"
         app:layout_constraintStart_toEndOf="@id/left_border"
-        app:layout_constraintTop_toBottomOf="@id/choose_tags_text"
-        >
+        app:layout_constraintTop_toBottomOf="@id/choose_tags_text">
+
         <com.google.android.material.chip.ChipGroup
             android:id="@+id/chip_group"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:singleLine="true"
-            >
+            app:singleLine="true">
 
         </com.google.android.material.chip.ChipGroup>
     </HorizontalScrollView>
-
 
     <Button
         android:id="@+id/input_button"
@@ -158,5 +157,16 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/right_border"
         app:layout_constraintStart_toEndOf="@id/left_border" />
+
+    <TextView
+        android:id="@+id/chosen_tags"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="121dp"
+        android:text="chosen tags"
+        app:layout_constraintBottom_toTopOf="@+id/input_button"
+        app:layout_constraintEnd_toStartOf="@+id/right_border"
+        app:layout_constraintStart_toStartOf="@+id/left_border"
+        app:layout_constraintTop_toBottomOf="@+id/horizontalScrollView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -5,25 +5,27 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.lifecycle.ViewModelProvider
+import com.example.taskmaster.TaskmasterApp
 import com.example.taskmaster.databinding.FragmentTagEditBinding
-import com.example.taskmaster.ui.pagerAdapters.EditAdapter
-
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+import com.example.taskmaster.model.ValidateState
+import com.example.taskmaster.repository.TagRepository
+import com.example.taskmaster.ui.viewModel.TagEditViewModel
+import com.example.taskmaster.ui.viewModel.TagEditViewModelFactory
 
 class TagEditFragment : Fragment() {
 
     private lateinit var binding: FragmentTagEditBinding
-
-    private var param1: String? = null
-    private var param2: String? = null
+    private lateinit var viewModel: TagEditViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
         }
+        viewModel = ViewModelProvider(
+            this, TagEditViewModelFactory(TagRepository(TaskmasterApp.INSTANCE.database.tagDao()))
+        ).get(TagEditViewModel::class.java)
     }
 
     override fun onCreateView(
@@ -35,19 +37,30 @@ class TagEditFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        arguments?.takeIf { it.containsKey(EditAdapter.POSITION) }?.apply {
-//            binding.tagEditTextForTesting.text = getInt(EditAdapter.POSITION).toString()
-        }
         super.onViewCreated(view, savedInstanceState)
+        viewModel.tagState.observe(requireActivity()){status ->
+            with(binding){
+                when(status){
+                    ValidateState.FALSE -> {
+                        Toast.makeText(requireActivity(), "Data is not valid.", Toast.LENGTH_SHORT).show()
+                    }
+                    ValidateState.TRUE  -> {
+                        tagNameInputEditText.text?.clear()
+                    }
+                    else  -> {}
+                }
+            }
+        }
+        binding.inputButton.setOnClickListener {
+            viewModel.editTag(binding.tagNameInputEditText.text?.toString()?:"")
+        }
     }
 
     companion object {
         @JvmStatic
-        fun newInstance(param1: String, param2: String) =
+        fun newInstance() =
             TagEditFragment().apply {
                 arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
                 }
             }
     }

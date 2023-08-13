@@ -56,7 +56,7 @@ class CurrentTasksViewModel(
                 }
             }
         }
-        currentSubtasksMediator = mediator
+        currentSubtasksMediator = mediator //TODO(is empty?)
     }
 
     fun setCurrentTag() {
