@@ -12,6 +12,7 @@ import com.example.taskmaster.repository.TaskRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import java.time.OffsetDateTime
 
 class TaskEditViewModel (private val tagRepository: TagRepository, private val taskRepository: TaskRepository):ViewModel(){
 
@@ -24,20 +25,25 @@ class TaskEditViewModel (private val tagRepository: TagRepository, private val t
     private val _tagList :LiveData<List<Tag>> = tagRepository.getAllLiveData()
     val tagList: LiveData<List<Tag>> = _tagList
 
-    private val _chosenTagList = mutableListOf<Int>()
-    val chosenTagList: MutableLiveData<List<Int>> = MutableLiveData(_chosenTagList)
+    val chosenTagList: MutableLiveData<List<Int>> = MutableLiveData()
 
+    val date= MutableLiveData<Long>()
 
     fun addChosenTag(id:Int){
-        _chosenTagList.add(id)
+        chosenTagList.postValue(chosenTagList.value?.plus(id))
     }
 
     fun removeChosenTag(id: Int){
-        _chosenTagList.remove(id)
+        chosenTagList.postValue(chosenTagList.value?.minus(id))
     }
 
     fun removeAllChosenTags(){
-        _chosenTagList.clear()
+        chosenTagList.postValue(mutableListOf<Int>())
+    }
+
+    fun setDate(time:Long){
+        date.value = time
+
     }
 }
 
