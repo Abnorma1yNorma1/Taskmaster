@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.liveData
 import com.example.taskmaster.model.Tag
 import com.example.taskmaster.model.ValidateState
 import com.example.taskmaster.repository.TagRepository
@@ -12,7 +11,6 @@ import com.example.taskmaster.repository.TaskRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
-import java.time.OffsetDateTime
 
 class TaskEditViewModel (private val tagRepository: TagRepository, private val taskRepository: TaskRepository):ViewModel(){
 
@@ -29,6 +27,8 @@ class TaskEditViewModel (private val tagRepository: TagRepository, private val t
 
     val date= MutableLiveData<Long>()
 
+    val time= MutableLiveData<Long>()
+
     fun addChosenTag(id:Int){
         chosenTagList.postValue(chosenTagList.value?.plus(id))
     }
@@ -41,9 +41,13 @@ class TaskEditViewModel (private val tagRepository: TagRepository, private val t
         chosenTagList.postValue(mutableListOf<Int>())
     }
 
-    fun setDate(time:Long){
-        date.value = time
+    fun setDate(date:Long){
+        this.date.value = date
 
+    }
+
+    fun setTime(time:Long){
+        this.time.value = time
     }
 }
 
