@@ -43,13 +43,16 @@
             android:textSize="20sp"
             android:lines="4"/>
 
-        <CheckBox
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/task_completed_button"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_gravity="end|top"
             android:layout_margin="10dp"
             android:gravity="center"
+            android:clickable="true"
+            android:background="@drawable/x"
+            android:backgroundTint="@color/black"
             />
 
         <TextView
@@ -91,7 +94,8 @@
             android:contentDescription="@string/expand_button"
             android:background="@drawable/expand_selector"
             android:backgroundTint="@color/material_dynamic_primary50"
-
+            android:clickable="true"
+            android:button="@null"
             />
 
     </com.google.android.material.card.MaterialCardView>

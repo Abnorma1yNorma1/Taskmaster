@@ -13,6 +13,8 @@ import com.example.taskmaster.model.Task
 import java.time.Clock
 import java.time.LocalDate
 import java.time.Period
+import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
 
 class TaskRecyclerAdapter(
     private val delegate: TaskClickDelegate,
@@ -38,10 +40,10 @@ class TaskRecyclerAdapter(
                 }
                 taskPriority.text = task.priority.toString()
                 taskTimeLeftText.text = untilTaskEnd(task)
-                taskExpandButton.setOnClickListener {
-                    if (itemBinding.taskExpandButton.isChecked) {
+                taskExpandButton.setOnCheckedChangeListener { buttonView, isChecked ->
+                    if (isChecked){
                         taskRecycler.visibility = View.GONE
-                    } else {
+                    }else{
                         taskRecycler.visibility = View.VISIBLE
                     }
                 }
@@ -82,10 +84,13 @@ class TaskRecyclerAdapter(
             return if (task.expirationDate == null) {
                 "-"
             } else {
-                val today = LocalDate.ofEpochDay(Clock.systemUTC().millis())
-                val date = LocalDate.ofEpochDay(task.expirationDate!!)
-                val timeLeft = Period.between(today, date)
-                "${timeLeft.years}Y\n${timeLeft.months}M\n${timeLeft.days}D"
+                LocalDate.ofEpochDay(task.expirationDate!!).format(DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT)).toString()
+
+
+//                val today = LocalDate.ofEpochDay(Clock.systemUTC().millis())
+//                val date = LocalDate.ofEpochDay(task.expirationDate!!)
+//                val timeLeft = Period.between(today, date)
+//                "${timeLeft.years}Y\n${timeLeft.months}M\n${timeLeft.days}D"
 
             }
 

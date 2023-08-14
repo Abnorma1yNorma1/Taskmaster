@@ -40,13 +40,16 @@
             android:textSize="20sp"
             android:lines="4"/>
 
-        <CheckBox
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/subtask_completed_button"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_gravity="end|top"
             android:layout_margin="10dp"
-            android:gravity="center"/>
+            android:gravity="center"
+            android:background="@drawable/x"
+            android:clickable="true"
+            android:backgroundTint="@color/black"/>
 
         <TextView
             android:id="@+id/subtask_priority"
