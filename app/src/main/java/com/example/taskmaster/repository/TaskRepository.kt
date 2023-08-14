@@ -3,7 +3,6 @@ package com.example.taskmaster.repository
 import androidx.lifecycle.LiveData
 import com.example.taskmaster.database.dao.TaskDao
 import com.example.taskmaster.model.BooleanStandIn
-import com.example.taskmaster.model.Tag
 import com.example.taskmaster.model.Task
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -21,6 +20,24 @@ class TaskRepository(private val taskDao: TaskDao) {
             taskDao.insert(task)
         }
     }
+
+    fun updateDescription(id: Long, description: String) =
+        taskScope.launch { taskDao.updateDescription(id, description) }
+
+    fun updatePriority(id: Long, priority: Byte) =
+        taskScope.launch { taskDao.updatePriority(id,priority)}
+
+    fun updateTagList(id: Long, tagList: List<Int>) =
+        taskScope.launch { taskDao.updateTagList(id, tagList) }
+
+    fun updateExpirationDate(id: Long, date: Long) =
+        taskScope.launch { taskDao.updateExpirationDate(id, date) }
+
+    fun updateNotifyTime(id: Long, time: Long) =
+        taskScope.launch { taskDao.updateNotifyTime(id, time) }
+
+    fun updateSuperTask(id: Long, superId: Long) =
+        taskScope.launch { taskDao.updateSuperTask(id,superId) }
 
     suspend fun getAllTasks(): List<Task> {
         return taskScope.async {
@@ -42,7 +59,7 @@ class TaskRepository(private val taskDao: TaskDao) {
         taskDao.getSubtasksOf(id)
     }.await()
 
-    suspend fun getTags(id: Long):List<Int> = taskScope.async {
+    suspend fun getTags(id: Long): List<Int> = taskScope.async {
         if (taskDao.getTagsAsString(id).isNotEmpty()) {
             mutableListOf()
         } else taskDao.getTagsAsString(id).split(",").map { it.toInt() }.toMutableList()

@@ -19,7 +19,7 @@ data class Task(
     var expirationDate: Long? = null,
     var notify: Byte = BooleanStandIn.FALSE.value,
     var notifyTime: Long? = null,
-    var superTask: Long = 0,
+    var superTask: Long? = null,
 //    var location: ,
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0

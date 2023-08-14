@@ -69,7 +69,8 @@ class TaskEditFragment : Fragment() {
         val month = date.get(Calendar.MONTH)
         val day = date.get(Calendar.DAY_OF_MONTH)
         val datePicker =
-            DatePickerDialog(requireContext(),
+            DatePickerDialog(
+                requireContext(),
                 { view, year, month, dayOfMonth ->
                     viewModel.setDate(LocalDate.of(year, month + 1, dayOfMonth).toEpochDay())
 //                    binding.dateChosenText.text =
@@ -89,39 +90,44 @@ class TaskEditFragment : Fragment() {
         timePicker =
             TimePickerDialog(requireContext(),
                 { view, hourOfDay, minute ->
-                    viewModel.setTime(LocalTime.of(hourOfDay,minute).toSecondOfDay().toLong())
+                    viewModel.setTime(LocalTime.of(hourOfDay, minute).toSecondOfDay().toLong())
 //                    binding.timeChosenText.text = String.format("%d : %d", hourOfDay, minute)
-                }, hour, minute, false)
+                }, hour, minute, false
+            )
         binding.chooseNotifyTimeButton.setOnClickListener { timePicker.show() }
-        viewModel.time.observe(viewLifecycleOwner){
+        viewModel.time.observe(viewLifecycleOwner) {
             val timer = LocalTime.ofSecondOfDay(it)
-            binding.timeChosenText.text = String.format("%d:%d",timer.hour,timer.minute)
+            binding.timeChosenText.text = String.format("%d:%d", timer.hour, timer.minute)
         }
-}
-
-private fun createChip(tag: Tag): Chip {
-    val chip = Chip(context, null, R.layout.item_tag_chip)
-    chip.text = tag.tagName
-    chip.isCheckable = true
-    chip.isClickable = true
-    chip.setOnCheckedChangeListener { buttonView, checked ->
-        if (checked) {
-            viewModel.addChosenTag(tag.id)
-            buttonView.isChecked = true
-        } else {
-            viewModel.removeChosenTag(tag.id)
-            buttonView.isChecked = false
+        binding.inputButton.setOnClickListener{
+            viewModel.editTask(binding.descriptionInputEditText.text?.toString()?:"",
+            binding.priorityInputEditText.text?.toString()?:"")
         }
     }
-    return chip
-}
 
-companion object {
-    @JvmStatic
-    fun newInstance() =
-        TaskEditFragment().apply {
-            arguments = Bundle().apply {
+    private fun createChip(tag: Tag): Chip {
+        val chip = Chip(context, null, R.layout.item_tag_chip)
+        chip.text = tag.tagName
+        chip.isCheckable = true
+        chip.isClickable = true
+        chip.setOnCheckedChangeListener { buttonView, checked ->
+            if (checked) {
+                viewModel.addChosenTag(tag.id)
+                buttonView.isChecked = true
+            } else {
+                viewModel.removeChosenTag(tag.id)
+                buttonView.isChecked = false
             }
         }
-}
+        return chip
+    }
+
+    companion object {
+        @JvmStatic
+        fun newInstance() =
+            TaskEditFragment().apply {
+                arguments = Bundle().apply {
+                }
+            }
+    }
 }

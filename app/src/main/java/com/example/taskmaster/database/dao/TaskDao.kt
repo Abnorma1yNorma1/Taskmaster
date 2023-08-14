@@ -48,7 +48,7 @@ interface TaskDao {
     fun updateNotifyTime(id: Long, notifyTime: Long?)
 
     @Query("UPDATE taskTable SET superTask = :superTask WHERE id = :id")
-    fun updateESuperTask(id: Long, superTask: Long)
+    fun updateSuperTask(id: Long, superTask: Long)
 
     @Query("SELECT * FROM taskTable WHERE id = :id")
     fun getTaskById(id: Long): Task
