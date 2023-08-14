@@ -76,13 +76,13 @@ class TaskEditViewModel(
             if (taskId == null) {
                 taskRepository.insertTask(task)
             } else {
-                with(taskRepository){   //TODO(properly)
+                with(taskRepository) {   //TODO(properly)
                     updateDescription(taskId!!, task.description)
                     updatePriority(taskId!!, task.priority)
                     updateTagList(taskId!!, task.tagList)
-                    updateExpirationDate(taskId!!,task.expirationDate!!)
-                    updateNotifyTime(taskId!!,task.notifyTime!!)
-                    updateSuperTask(taskId!!,task.superTask!!)
+                    updateExpirationDate(taskId!!, task.expirationDate!!)
+                    updateNotifyTime(taskId!!, task.notifyTime!!)
+                    updateSuperTask(taskId!!, task.superTask!!)
                 }
 
 
@@ -101,11 +101,11 @@ class TaskEditViewModel(
             null
         } else {
             _taskState.value = ValidateState.TRUE
-            try {
-                priority.toByte()
-            } catch (ex: NumberFormatException) {
-                _taskState.value = ValidateState.FALSE
-            }
+//            try {
+//                priority.toByte()
+//            } catch (ex: NumberFormatException) {
+//                _taskState.value = ValidateState.FALSE
+//            }
             val list = mutableListOf<Int>()
             tagList.value?.forEach {
                 list.add(it.id)

@@ -15,7 +15,7 @@ class TaskTypeConverters {
 
     @TypeConverter
     fun stringToIntList(string: String): MutableList<Int> {
-        return if (string.isNotEmpty()) {
+        return if (string.isEmpty()) {
             mutableListOf()
         } else string.split(",").map { it.toInt() }.toMutableList()
 
